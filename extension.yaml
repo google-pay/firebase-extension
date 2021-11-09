@@ -1,0 +1,240 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: make-payment
+version: 0.1.0
+specVersion: v1beta
+
+displayName: Make Payments with Google Pay
+description: Makes a payment with Google Pay via one or more supported Payment Service Providers, and writes the response to Cloud Firestore.
+
+license: Apache-2.0
+
+sourceUrl: https://github.com/google-pay/firebase-extension/tree/main
+releaseNotesUrl: https://github.com/google-pay/firebase-extension/blob/main/CHANGELOG.md
+
+author:
+  authorName: Google Pay
+  url: https://developers.google.com/pay/api
+
+contributors:
+  - authorName: Stephen McDonald
+    email: stephenmcd@google.com
+    url: https://developers.google.com/pay/api
+
+billingRequired: true
+
+params:
+  - param: LOCATION
+    label: Cloud Functions location
+    description: >-
+      Where do you want to deploy the functions created for this extension?
+      You usually want a location close to your database. Realtime Database
+      instances are located in `us-central1`. For help selecting a
+      location, refer to the [location selection
+      guide](https://firebase.google.com/docs/functions/locations).
+    type: select
+    options:
+      - label: Iowa (us-central1)
+        value: us-central1
+      - label: South Carolina (us-east1)
+        value: us-east1
+      - label: Northern Virginia (us-east4)
+        value: us-east4
+      - label: Belgium (europe-west1)
+        value: europe-west1
+      - label: London (europe-west2)
+        value: europe-west2
+      - label: Taiwan (asia-east1)
+        value: asia-east1
+      - label: Hong Kong (asia-east2)
+        value: asia-east2
+      - label: Tokyo (asia-northeast1)
+        value: asia-northeast1
+      - label: Osaka (asia-northeast2)
+        value: asia-northeast2
+      - label: Los Angeles (us-west2)
+        value: us-west2
+      - label: Salt Lake City (us-west3)
+        value: us-west3
+      - label: Las Vegas (us-west4)
+        value: us-west4
+      - label: Montreal (northamerica-northeast1)
+        value: northamerica-northeast1
+      - label: Sao Paulo (southamerica-east1)
+        value: southamerica-east1
+      - label: Frankfurt (europe-west3)
+        value: europe-west3
+      - label: Zurich (europe-west6)
+        value: europe-west6
+      - label: Warsaw (europe-central2)
+        value: europe-central2
+      - label: Sydney (australia-southeast1)
+        value: australia-southeast1
+      - label: Mumbai (asia-south1)
+        value: asia-south1
+      - label: Singapore (asia-southeast1)
+        value: asia-southeast1
+      - label: Jakarta (asia-southeast2)
+        value: asia-southeast2
+      - label: Seoul (asia-northeast3)
+        value: asia-northeast3
+    default: us-central1
+    required: true
+    immutable: true
+
+  - param: FIRESTORE_PATH
+    label: Cloud Firestore path
+    description: >-
+      What is the path to the Cloud Firestore collection you want to use for
+      payment requests? You make payment requests by adding documents to this
+      collection; the response will be written back to the same document.
+    required: true
+    default: payments
+    example: path/to/payments
+
+  - param: ADYEN_CONFIG
+    label: Adyen Config
+    description: >-
+      If you will use Adyen as a payment processor, specify your account
+      information as a JSON object.
+
+      For example:
+
+      ```
+      {
+          "environment": "",
+          "merchantAccount": ""
+      }
+      ```
+    required: false
+    default: '{}'
+
+  - param: ADYEN_API_KEY
+    label: Adyen API Key
+    type: secret
+    description: >-
+      If you will use Adyen as a payment processor, specify your Adyen API key.
+    required: false
+
+  - param: BRAINTREE_CONFIG
+    label: Braintree Config
+    description: >-
+      If you will use Braintree as a payment processor, specify your account
+      information as a JSON object.
+
+      For example:
+
+      ```
+      {
+          "environment": "Sandbox",
+          "merchantId": "",
+          "publicKey": ""
+      }
+      ```
+    required: false
+    default: '{}'
+
+  - param: BRAINTREE_PRIVATE_KEY
+    label: Braintree Private Key
+    type: secret
+    description: >-
+      If you will use Braintree as a payment processor, specify your Braintree private key.
+    required: false
+
+  - param: CHECKOUTLTD_CONFIG
+    label: Checkout.com Config
+    description: >-
+      If you will use Checkout.com as a payment processor, specify your account
+      information as a JSON object.
+
+      For example:
+
+      ```
+      {
+          "publicKey": ""
+      }
+      ```
+    required: false
+    default: '{}'
+
+  - param: CHECKOUTLTD_SECRET_KEY
+    label: Checkout.com Secret Key
+    type: secret
+    description: >-
+      If you will use Checkout.com as a payment processor, specify your Checkout.com secret key.
+    required: false
+
+  - param: CYBERSOURCE_CONFIG
+    label: Cybersource Config
+    description: >-
+      If you will use Cybersource as a payment processor, specify your account
+      information as a JSON object.
+
+      For example:
+
+      ```
+      {
+          "authenticationType": "",
+          "runEnvironment": "",
+          "merchantID": "",
+          "merchantKeyId": ""
+      }
+      ```
+    required: false
+    default: '{}'
+
+  - param: CYBERSOURCE_SECRET_KEY
+    label: Cybersource Secret Key
+    type: secret
+    description: >-
+      If you will use Cybersource as a payment processor, specify your Cybersource secret key.
+    required: false
+
+  - param: SQUARE_CONFIG
+    label: Square Config
+    description: >-
+      If you will use Square as a payment processor, specify your account
+      information as a JSON object.
+
+      For example:
+
+      ```
+      {
+          "environment": ""
+      }
+      ```
+    required: false
+    default: '{}'
+
+  - param: SQUARE_ACCESS_TOKEN
+    label: Square Access token
+    type: secret
+    description: >-
+      If you will use Square as a payment processor, specify your Square access token.
+    required: false
+
+roles:
+  - role: datastore.user
+    reason: Allows this extension to access Cloud Firestore to read and process added payment documents.
+
+resources:
+
+  - name: databasePay
+    type: firebaseextensions.v1beta.function
+    properties:
+      location: ${LOCATION}
+      eventTrigger:
+        eventType: providers/cloud.firestore/eventTypes/document.create
+        resource: projects/${PROJECT_ID}/databases/(default)/documents/${FIRESTORE_PATH}/{documentID}

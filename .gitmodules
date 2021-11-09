@@ -1,0 +1,3 @@
+[submodule "functions/google-pay-psp-client"]
+	path = functions/google-pay-psp-client
+	url = git@github.com:google-pay/pay-server-demos.git

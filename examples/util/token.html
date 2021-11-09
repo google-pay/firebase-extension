@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<!--
+
+ Copyright 2021 Google LLC. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+<head>
+<title>Google Pay Token Generator</title>
+<script src="https://pay.google.com/gp/p/js/pay.js"></script>
+<script>
+
+function el(id) {
+  return document.getElementById(id);
+}
+
+function output(s) {
+  el('output').innerHTML = s;
+}
+
+const previousParameters = JSON.parse(localStorage.getItem('previous') || '{}');
+
+const paymentRequest = {
+  apiVersion: 2,
+  apiVersionMinor: 0,
+  allowedPaymentMethods: [
+    {
+      type: 'CARD',
+      parameters: {
+        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+        allowedCardNetworks: ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA'],
+      },
+      tokenizationSpecification: {
+        type: 'PAYMENT_GATEWAY',
+      },
+    },
+  ],
+  merchantInfo: {
+    merchantId: '01234567890123456789',
+    merchantName: 'Example Merchant',
+  },
+  transactionInfo: {
+    totalPriceStatus: 'FINAL',
+    totalPrice: '1.00',
+    currencyCode: 'USD',
+    countryCode: 'US',
+  }
+};
+
+function loadPrevious() {
+  const select = document.getElementById('previous');
+
+  if (select.innerHTML == '') {
+    select.addEventListener('change', () => {
+      if (select.selectedIndex > 0) {
+        el('parameters').value = JSON.stringify(previousParameters[select[select.selectedIndex].value], null, 2);
+      }
+    });
+  }
+
+  select.innerHTML = '<option>Choose previous parameters</option>';
+  if (Object.keys(previousParameters).length > 0) {
+    for (const k in previousParameters) {
+      select.innerHTML += `<option>${previousParameters[k].gateway}</option>`;
+    }
+    select.style.display = 'block';
+  }
+}
+
+window.addEventListener('load', () => {
+
+  loadPrevious();
+
+  document.getElementById('button').addEventListener('click', () => {
+
+    const gatewayParameters = JSON.parse(document.getElementById('parameters').value || '{}');
+    if (!gatewayParameters.gateway) return;
+
+    paymentRequest.allowedPaymentMethods[0].tokenizationSpecification.parameters = gatewayParameters;
+        previousParameters[gatewayParameters.gateway] = gatewayParameters;
+
+    output('');
+
+    const googlePayClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+
+    googlePayClient
+      .isReadyToPay(paymentRequest)
+      .then(response => {
+        if (response.result) {
+          googlePayClient
+            .loadPaymentData(paymentRequest)
+            .then(r => {
+              localStorage.setItem('previous', JSON.stringify(previousParameters));
+              loadPrevious();
+              const token = JSON.stringify(JSON.parse(r.paymentMethodData.tokenizationData.token), null, 2);
+              if (location.search === '?postback') {
+                fetch('/?paymentRequest=' + JSON.stringify({
+                  psp: gatewayParameters.gateway,
+                  currency: paymentRequest.transactionInfo.currencyCode,
+                  total: paymentRequest.transactionInfo.totalPrice,
+                  paymentToken: token
+                })).then(window.close);
+              } else {
+                output(`Payment token:<br><br><textarea>${token}</textarea>`);
+              }
+            })
+            .catch(console.error);
+        } else {
+          output('Google Pay unavailable');
+        }
+      })
+      .catch(console.error);
+  });
+});
+
+</script>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:100,300,400,500,700%7CGoogle+Sans:400,500%7CGoogle+Sans+Text:400,700%7CProduct+Sans:400" />
+<style>
+
+body * {font-family: "Product Sans";}
+#header {text-align: left; padding: 10px; border-bottom: 2px solid #eee; margin-bottom: 40px;}
+#header img {width: 100px; vertical-align: middle;}
+textarea, select {margin-bottom: 20px;}
+textarea {width: 600px; height: 400px;}
+select {display: none;}
+i {display: block;}
+pre, textarea {font-family: monospace;}
+#parameters {height: 150px;}
+#button {cursor: pointer;}
+
+</style>
+</head>
+<body>
+
+<h1 id="header"><img src="https://lh3.googleusercontent.com/cRtUh8iAq4OZRgAyk8w2afb6wZ68dd1grKIzIRS92JpiqCtvHcVFU7YDcyvAtVVbA-vV5UAtMFtjX40w9D4Ssh_94DZSX5h4lrnf6qg"></h1>
+
+<p>Enter the gateway <a href="https://developers.google.com/pay/api/web/reference/request-objects#PaymentMethodTokenizationSpecification">parameters</a> JSON for your PSP.
+</p>
+
+<i>Example:</i>
+<pre>
+{
+  "gateway": "braintree",
+  "braintree:apiVersion": "v1",
+  "braintree:sdkVersion": "braintree.client.VERSION",
+  "braintree:merchantId": "YOUR_BRAINTREE_MERCHANT_ID",
+  "braintree:clientKey": "YOUR_BRAINTREE_TOKENIZATION_KEY"
+}
+</pre>
+
+<select id="previous"></select>
+<textarea id="parameters"></textarea><br>
+<input type="button" value="Get payment token" id="button">
+
+<p id="output"></p>
+</body>
+</html>
