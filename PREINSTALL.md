@@ -4,7 +4,7 @@ With this extension installed, you can pass a payment token from the [Google Pay
 
 Write the following JSON payload to your Cloud Firestore instance to make a payment request:
 
-```
+```js
 {
   psp: 'braintree',
   total: 100,
@@ -27,7 +27,7 @@ Before installing this extension, make sure that you've created an account with 
 
 - [Adyen](https://docs.adyen.com/payment-methods/google-pay/api-only)
 
-  ```
+  ```js
   {
       "environment": "",
       "merchantAccount": ""
@@ -36,7 +36,7 @@ Before installing this extension, make sure that you've created an account with 
 
 - [Braintree](https://developer.paypal.com/braintree/docs/guides/google-pay/overview)
 
-  ```
+  ```js
   {
       "environment": "Sandbox",
       "merchantId": "",
@@ -46,7 +46,7 @@ Before installing this extension, make sure that you've created an account with 
 
 - [Checkout.com](https://docs.checkout.com/payments/payment-methods)
 
-  ```
+  ```js
   {
       "publicKey": ""
   }
@@ -54,7 +54,7 @@ Before installing this extension, make sure that you've created an account with 
 
 - [Cybersource](https://docs.cybersource.com/en/payments-tech-docs/googlepay.html)
 
-  ```
+  ```js
   {
       "authenticationType": "",
       "runEnvironment": "",
@@ -65,7 +65,7 @@ Before installing this extension, make sure that you've created an account with 
 
 - [Square](https://developer.squareup.com/docs/payment-form/add-digital-wallets/google-pay)
 
-  ```
+  ```js
   {
       "environment": ""
   }
