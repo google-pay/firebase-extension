@@ -71,7 +71,7 @@ Before installing this extension, make sure that you've created an account with 
   }
   ```
 
-Each PSP also requires a parameter that the extension will store using [Cloud Secrets Manager](https://cloud.google.com/functions/docs/configuring/secrets), such as an API key or access token, specific to the PSP.
+Each PSP also requires a parameter that the extension will store using [Cloud Secret Manager](https://cloud.google.com/functions/docs/configuring/secrets), such as an API key or access token, specific to the PSP.
 
 #### Billing
 
@@ -80,6 +80,7 @@ To install an extension, your project must be on the [Blaze (pay as you go) plan
 - You will be charged a small amount (typically around $0.01/month) for the Firebase resources required by this extension (even if it is not used).
 - This extension uses other Firebase and Google Cloud Platform services, which have associated charges if you exceed the service’s free tier:
   - Cloud Firestore
+  - Cloud Secret Manager
   - Cloud Functions (Node.js 10+ runtime. [See FAQs](https://firebase.google.com/support/faq#extensions-pricing))
 
 You are also responsible for any fees charged by the PSPs you use.
