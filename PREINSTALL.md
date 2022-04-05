@@ -63,7 +63,7 @@ Before installing this extension, make sure that you've created an account with 
   }
   ```
 
-- [Square](https://developer.squareup.com/docs/payment-form/add-digital-wallets/google-pay)
+- [Square](https://developer.squareup.com/docs/web-payments/google-pay)
 
   ```js
   {
