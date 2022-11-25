@@ -21,7 +21,7 @@ Write the following JSON payload to your Cloud Firestore instance to make a paym
 }
 ```
 
-As you can see, the PSP is specified in the request payload, which means you can configure and support multiple PSPs using this extension. The following PSPs are currently supported (the value for the 'psp' field above is noted in parentheses):
+As you can see, the PSP is specifed in the request payload, which means you can configure and support multiple PSPs using this extension. The following PSPs are currently supported (the value for the 'psp' field above is noted in parentheses):
 
 - Adyen (adyen)
 - Braintree (braintree)
