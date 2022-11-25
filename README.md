@@ -15,7 +15,7 @@ Write the following JSON payload to your Cloud Firestore instance to make a paym
 ```
 {
   psp: 'braintree',
-  total: 100,
+  total: 1000000000,
   currency: 'USD',
   paymentToken: <Google Pay API payment token>
 }
